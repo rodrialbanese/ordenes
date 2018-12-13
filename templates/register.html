@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block head %}
+// Validación de registro
+<script>
+function validate_register() {
+ if( document.myForm.username.value == "" ) {
+    alert( "Por favor ingresar nombre de usuario" );
+    document.myForm.username.focus() ;
+    return false;
+ }
+ else if( document.myForm.password.value == "" ) {
+    alert( "Por favor ingresar constraseña" );
+    document.myForm.password.focus() ;
+    return false;
+ }
+ else if( document.myForm.password.value != document.myForm.confirmation.value ) {
+    alert( "Contraseña y confirmacion deben ser iguales" );
+    document.myForm.confirmation.focus() ;
+    return false;
+ }
+ return( true );
+}
+</script>
+
+{% endblock %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+
+    <form name="myForm" action="/register" method="post" onsubmit = "return(validate_register());">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password"/>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="confirmation" placeholder="Password" type="password"/>
+        </div>
+        <button class="btn btn-primary" type="submit">Register</button>
+    </form>
+
+{% endblock %}
+

@@ -1,0 +1,164 @@
+{% extends "layout.html" %}
+
+{% block head %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  function validate_carga() {
+    if ((document.getElementById("AC_abre").checked) && (document.getElementById("AC_cancela").checked)) {
+      alert( "No se puede Abrir y Cancelar a la vez" );
+      return false;
+   }
+   return( true );
+  }
+
+  $("#id_Operador").typeahead({
+      highlight: false,
+      minLength: 1
+  },
+  {
+      display: "nombre",
+      limit: 10,
+      source: busca_operadores,
+  }
+  );
+
+  function busca_operadores(query, syncResults, asyncResults)
+  {
+      // Get places matching query (asynchronously)
+      let parameters = {
+          q: query
+      };
+      $.getJSON("/busca_operadores", parameters, function(data, textStatus, jqXHR) {
+
+          // Call typeahead's callback with search results (i.e., places)
+          asyncResults(data)
+          ;
+      });
+  }
+});
+</script>
+{% endblock %}
+
+{% block title %}
+   Carga de Órdenes
+{% endblock %}
+
+{% block main %}
+
+<div class="container p-5">
+  <form name="formulario_Carga" action="/carga" method="post" onsubmit = "return(validate_carga());">
+    <div class="form-group row">
+      <label for="tipo_Op" class="col-3 col-form-label">Tipo de Operación</label>
+      <div class="col-9">
+        <select id="tipo_Op" name="tipo_Op" required="required" class="custom-select">
+          <option value="C">Compra</option>
+          <option value="V">Venta</option>
+          <option value="S">Suscripción</option>
+          <option value="R">Rescate</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="cantidad" class="col-3 col-form-label">Cantidad</label>
+      <div class="col-9">
+        <input id="cantidad" name="cantidad" placeholder="Cantidad" type="number" required="required" class="form-control here">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="tipo_Activo" class="col-3 col-form-label">Tipo de Activo</label>
+      <div class="col-9">
+        <input id="tipo_Activo" name="tipo_Activo" placeholder="Tipo de Activo" type="text" required="required" class="form-control here">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="producto" class="col-3 col-form-label">Producto</label>
+      <div class="col-9">
+        <input id="producto" name="producto" placeholder="Producto" type="text" required="required" class="form-control here">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="mes" class="col-3 col-form-label">Mes</label>
+      <div class="col-9">
+        <input id="mes" name="mes" placeholder="Mes" type="month" class="form-control here">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="precio" class="col-3 col-form-label">Precio</label>
+      <div class="col-9">
+        <input id="precio" name="precio" placeholder="Precio" type="text" class="form-control here">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-3">Al Mercado?</label>
+      <div class="col-9">
+        <label class="custom-control custom-checkbox">
+          <input name="al_Mercado" type="checkbox" class="custom-control-input" value="yes">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">Si</span>
+        </label>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-3"></div>
+      <div class="col-9">
+        <label class="custom-control custom-checkbox">
+          <input id="AC_abre" name="AC_abre" type="checkbox" class="custom-control-input" value="A">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">Abre</span>
+        </label>
+        <label class="custom-control custom-checkbox">
+          <input id="AC_cancela" name="AC_cancela" type="checkbox" class="custom-control-input" value="C">
+          <span class="custom-control-indicator"></span>
+          <span class="custom-control-description">Cancela</span>
+        </label>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="id_Cliente" class="col-3 col-form-label">Cliente</label>
+      <div class="col-9">
+        <input id="id_Cliente" name="id_Cliente" placeholder="Cliente" type="text" required="required" class="form-control here">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="prima" class="col-3 col-form-label">Prima</label>
+      <div class="col-9">
+        <input id="prima" name="prima" placeholder="Prima" type="text" class="form-control here">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="id_Operador" class="col-3 col-form-label">Operador</label>
+      <div class="col-9">
+        <input id="id_Operador" name="id_Operador" placeholder="Operador" type="text" class="form-control here" required="required" autocomplete="off">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="id_Metodo" class="col-3 col-form-label">Método</label>
+      <div class="col-9">
+        <select id="id_Metodo" name="id_Metodo" class="custom-select" required="required">
+          <option value="0">Whatsapp</option>
+          <option value="1">Correo</option>
+          <option value="2">Teléfono Fijo</option>
+          <option value="3">Teléfono Celular</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="hora" class="col-3 col-form-label">Hora</label>
+      <div class="col-9">
+        <input id="hora" name="hora" placeholder="Hora (hh:mm)" type="time" class="form-control here" required="required">
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="offset-3 col-9">
+        <button name="submit" type="submit" class="btn btn-primary">Enviar</button>
+      </div>
+    </div>
+  </form>
+
+</div>
+{% endblock %}
+
+

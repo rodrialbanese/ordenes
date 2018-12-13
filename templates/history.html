@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Porfolio
+{% endblock %}
+
+{% block main %}
+
+<table style="width:100%">
+  <tr>
+    <th>B/S</th>
+    <th>Symbol</th>
+    <th>Name</th>
+    <th>Shares</th>
+    <th>Price</th>
+  </tr>
+    {% for accion in acciones %}
+  <tr>
+    <td>{{ accion.tipo }}</td>
+    <td>{{ accion.stock }}</td>
+    <td>{{ accion.name }}</td>
+    <td>{{ accion.cantidad }}</td>
+    <td>{{ accion.precio | usd }}</td>
+  </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
